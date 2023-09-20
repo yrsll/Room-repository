@@ -10,13 +10,15 @@ import com.example.roombymyself.data.MainDB
 import com.example.roombymyself.data.NameEntity
 import kotlinx.coroutines.launch
 
-class MainViewModel(database: MainDB):ViewModel() {
+class MainViewModel(val database: MainDB):ViewModel() {
     val itemsList = database.dao.getAllItems()
     val newText = mutableStateOf("")
     val nameEntity:NameEntity?=null
 
     fun insertItem()=viewModelScope.launch {
         val nameItem = nameEntity?.copy(name=newText.value) ?: NameEntity(name = newText.value)
+        database.dao.insertItem(nameItem)
+        nameEntity = null
     }
 
     companion object{
